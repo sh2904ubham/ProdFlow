@@ -5,7 +5,10 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 
 dotenv.config();
-
+dotenv.config({ path: __dirname + '/.env' });
+console.log("LOADED ENV FILE FROM:", __dirname + '/.env');
+console.log("DEBUG MONGO_URI:", process.env.MONGO_URI);
+console.log("DEBUG MONGO_URI =>", JSON.stringify(process.env.MONGO_URI));
 const app = express();
 
 // Connect Database

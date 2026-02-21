@@ -70,8 +70,14 @@ const deleteTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
-    if (task.user.toString() !== req.user._id.toString()) return res.status(403).json({ message: 'Forbidden' });
-    await task.remove();
+
+    // Ensure user owns the task
+    if (task.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    await task.deleteOne(); // <-- FIXED
+
     res.json({ message: 'Task removed' });
   } catch (error) {
     console.error(error);

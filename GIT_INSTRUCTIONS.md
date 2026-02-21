@@ -19,9 +19,10 @@ git push --set-upstream origin dev
 ```
 
 Branching workflow
+
 - main: production
 - dev: integration
-- feature/*: feature branches
-- hotfix/*: urgent fixes
+- feature/\*: feature branches
+- hotfix/\*: urgent fixes
 
 Create a PR from feature branch to dev, include CI green before merging.```

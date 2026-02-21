@@ -11,29 +11,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install backend dependencies
+      - name: Backend | Install & Test
         working-directory: ./backend
-        run: npm install
+        run: |
+          npm ci
+          npm test --if-present
 
-      - name: Run backend tests
-        working-directory: ./backend
-        run: npm test --if-present
-
-      - name: Install frontend dependencies
+      - name: Frontend | Install & Build
         working-directory: ./frontend
-        run: npm install
-
-      - name: Build frontend
-        working-directory: ./frontend
-        run: npm run build
-
-      - name: Build Docker images
-        run: docker compose build
+        run: |
+          npm ci
+          npm run build

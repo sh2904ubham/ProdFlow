@@ -1,21 +1,34 @@
-name: Deployment Simulation
+name: Deploy to EC2
 
 on:
-  workflow_dispatch:   # run manually from GitHub Actions tab
+  push:
+    branches: ["main"]
 
 jobs:
-  simulate_deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker Images
-        run: docker compose build
+      - name: Copy repo to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "."
+          target: "~/ProdFlow"
 
-      - name: Run Docker Containers
-        run: docker compose up -d
-
-      - name: Show Running Containers
-        run: docker ps -a
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ProdFlow
+            docker compose down
+            docker compose build
+            docker compose up -d

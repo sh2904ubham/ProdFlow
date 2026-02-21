@@ -1,0 +1,4 @@
+/* minimal styles */
+nav { margin-bottom: 16px; }
+form > div { margin-bottom: 8px; }
+button { cursor: pointer; }

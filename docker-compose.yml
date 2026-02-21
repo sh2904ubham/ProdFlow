@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:6.0
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - tm-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/taskmanager
+      - JWT_SECRET=supersecret
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongo
+    networks:
+      - tm-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - '3000:80'
+    networks:
+      - tm-net
+
+volumes:
+  mongo-data:
+
+networks:
+  tm-net:
+    driver: bridge

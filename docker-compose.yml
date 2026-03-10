@@ -39,6 +39,8 @@ services:
     image: ghcr.io/openclaw/openclaw:latest
     ports:
       - "8080:8080"
+    environment:
+      OPENCLAW_HOST: 0.0.0.0 # <-- added this line
     depends_on:
       - backend
     networks:

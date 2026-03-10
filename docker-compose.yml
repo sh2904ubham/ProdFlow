@@ -11,7 +11,7 @@ services:
 
   backend:
     build:
-      context: ./backend # <-- change to backend folder
+      context: ./backend
       dockerfile: ../docker/backend.Dockerfile
     environment:
       NODE_ENV: development
@@ -27,10 +27,35 @@ services:
 
   frontend:
     build:
-      context: ./frontend # <-- change to frontend folder
+      context: ./frontend
       dockerfile: ../docker/frontend.Dockerfile
     ports:
       - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - tm-net
+
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - tm-net
+    depends_on:
+      - backend
+
+  telegram-bot:
+    build:
+      context: ./telegram-bot
+      dockerfile: Dockerfile
+    environment:
+      TELEGRAM_TOKEN: YOUR_TELEGRAM_BOT_TOKEN
+      BACKEND_API: http://backend:5000
+      OPENCLAW_API: http://openclaw:8080
+    depends_on:
+      - openclaw
+      - backend
     networks:
       - tm-net
 

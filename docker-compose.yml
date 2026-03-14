@@ -39,7 +39,8 @@ services:
   openclaw:
     image: ghcr.io/openclaw/openclaw:latest
     container_name: tm-openclaw
-    command: ["openclaw", "serve", "--host", "0.0.0.0"]
+    volumes:
+      - openclaw-data:/home/node/.openclaw
     ports:
       - "18791:18791"
       - "18789:18789"
@@ -66,6 +67,7 @@ services:
 
 volumes:
   mongo-data:
+  openclaw-data:
 
 networks:
   tm-net:

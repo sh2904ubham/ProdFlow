@@ -39,7 +39,6 @@ services:
     image: ghcr.io/openclaw/openclaw:latest
     ports:
       - "8080:8080"
-    command: ["--host", "0.0.0.0"] # <--- FINAL FIX: listen on all interfaces
     depends_on:
       - backend
     networks:

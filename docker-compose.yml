@@ -39,9 +39,7 @@ services:
   openclaw:
     image: ghcr.io/openclaw/openclaw:latest
     container_name: tm-openclaw
-    environment:
-      - HOST=0.0.0.0
-      - OPENCLAW_AUTH=false
+    command: ["openclaw", "serve", "--host", "0.0.0.0"]
     ports:
       - "18791:18791"
       - "18789:18789"

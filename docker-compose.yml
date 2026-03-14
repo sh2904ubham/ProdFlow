@@ -1,13 +1,6 @@
-services:
-  mongo:
-    image: mongo:6.0
-    container_name: tm-mongo
-    restart: unless-stopped
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - tm-net
+version: "3.8"
 
+services:
   backend:
     build:
       context: ./backend
@@ -17,8 +10,6 @@ services:
       - ./backend/.env
     ports:
       - "5000:5000"
-    depends_on:
-      - mongo
     networks:
       - tm-net
     restart: unless-stopped
@@ -35,39 +26,6 @@ services:
     networks:
       - tm-net
     restart: unless-stopped
-
-  openclaw:
-    image: ghcr.io/openclaw/openclaw:latest
-    container_name: tm-openclaw
-    volumes:
-      - openclaw-data:/home/node/.openclaw
-    ports:
-      - "18791:18791"
-      - "18789:18789"
-    networks:
-      - tm-net
-    restart: unless-stopped
-
-  telegram-bot:
-    build:
-      context: ./telegram-bot
-      dockerfile: Dockerfile
-    container_name: tm-telegram-bot
-    env_file:
-      - ./backend/.env
-    environment:
-      BACKEND_API: http://backend:5000
-      OPENCLAW_API: http://openclaw:18791
-    depends_on:
-      - backend
-      - openclaw
-    networks:
-      - tm-net
-    restart: unless-stopped
-
-volumes:
-  mongo-data:
-  openclaw-data:
 
 networks:
   tm-net:
